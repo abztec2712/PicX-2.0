@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: cimg/node:18  # Updated CircleCI node image
+      - image: cimg/node:18.17  # ✅ Updated image
 
 jobs:
   build:
@@ -14,15 +14,12 @@ jobs:
           name: Install dependencies
           command: npm install
       - run:
-          name: Check Vite installation
-          command: npx vite --version
-      - run:
           name: Build project
           command: npm run build
       - persist_to_workspace:
           root: .
           paths:
-            - dist  # Ensure 'dist' directory is saved for deployment
+            - build
 
   deploy:
     executor: node-executor
@@ -30,11 +27,13 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"  # Replace with your CircleCI SSH key fingerprint
       - run:
-          name: Deploy to Vercel
+          name: Deploy to EC2
           command: |
-            npm install -g vercel
-            vercel --prod --token $VERCEL_TOKEN
+            scp -o StrictHostKeyChecking=no -r build/* ec2-user@44.203.66.201:/var/www/html
 
 workflows:
   version: 2
@@ -44,3 +43,4 @@ workflows:
       - deploy:
           requires:
             - build
+
