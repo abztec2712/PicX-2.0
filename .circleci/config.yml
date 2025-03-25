@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Deploy to EC2
           command: |
-          scp -o StrictHostKeyChecking=no -r ~/project/dist/* ec2-user@54.174.92.185:/var/www/html
+            scp -o StrictHostKeyChecking=no -r ~/project/dist/* ec2-user@54.174.92.185:/var/www/html
 
 
 workflows:
