@@ -1,9 +1,10 @@
 version: 2.1
+version: 2.1
 
 executors:
   node-executor:
     docker:
-      - image: circleci/node:18
+      - image: cimg/node:18.17  # ✅ Updated image
 
 jobs:
   build:
@@ -27,10 +28,13 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"  # Replace with your CircleCI SSH key fingerprint
       - run:
           name: Deploy to EC2
           command: |
-            scp -r -i ~/.ssh/your-key.pem build/* ec2-user@44.203.66.201:/var/www/html
+            scp -o StrictHostKeyChecking=no -r build/* ec2-user@44.203.66.201:/var/www/html
 
 workflows:
   version: 2
@@ -40,5 +44,6 @@ workflows:
       - deploy:
           requires:
             - build
+
 
 
