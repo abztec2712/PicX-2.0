@@ -1,10 +1,9 @@
 version: 2.1
-version: 2.1
 
 executors:
   node-executor:
     docker:
-      - image: cimg/node:18.17  # ✅ Updated image
+      - image: cimg/node:18.17  # ✅ Updated Node image
 
 jobs:
   build:
@@ -30,7 +29,7 @@ jobs:
           at: .
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"  # Replace with your CircleCI SSH key fingerprint
+            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"
       - run:
           name: Deploy to EC2
           command: |
@@ -44,6 +43,3 @@ workflows:
       - deploy:
           requires:
             - build
-
-
-
