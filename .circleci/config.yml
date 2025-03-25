@@ -27,10 +27,14 @@ jobs:
       - run:
           name: Build Project
           command: npm run build
+      - run:
+          name: Debug - List Files After Build
+          command: ls -la ~/project  # ✅ Check if `build/` exists
       - persist_to_workspace:
           root: ~/project
           paths:
-            - dist  # Ensure this matches your Vite output folder
+            - build  # ✅ Ensure the `build/` folder is saved
+            - dist
 
 
   deploy:
@@ -41,8 +45,8 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run:
-          name: Verify Build Files Before Deploy
-          command: ls -la build/ || echo "Build folder not found!"  # ✅ Debugging step
+          name: Debug - List Files
+          command: ls -la ~/project  # ✅ Check if build folder exists
       - run:
           name: Deploy to EC2
           command: |
