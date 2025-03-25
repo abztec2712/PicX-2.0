@@ -34,19 +34,19 @@ jobs:
 
 
     deploy:
-    executor: node-executor
-    working_directory: ~/project
-    steps:
-      - checkout
-      - attach_workspace:
+      executor: node-executor
+      working_directory: ~/project
+      steps:
+       - checkout
+       - attach_workspace:
           at: ~/project
-      - add_ssh_keys:
+       - add_ssh_keys:
           fingerprints:
             - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"
-      - run:
+       - run:
           name: Ensure target directory exists
           command: ssh -o StrictHostKeyChecking=no ec2-user@54.174.92.185 "mkdir -p /var/www/html"
-      - run:
+       - run:
           name: Deploy to EC2
           command: scp -o StrictHostKeyChecking=no -r ~/project/dist/* ec2-user@54.174.92.185:/var/www/html
 
