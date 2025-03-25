@@ -27,13 +27,9 @@ jobs:
       - run:
           name: Build Project
           command: npm run build
-      - run:
-          name: Debug - List Files After Build
-          command: ls -la ~/project  # ✅ Check if `build/` exists
       - persist_to_workspace:
           root: ~/project
           paths:
-            - build  # ✅ Ensure the `build/` folder is saved
             - dist
 
 
@@ -45,12 +41,10 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run:
-          name: Debug - List Files
-          command: ls -la ~/project  # ✅ Check if build folder exists
-      - run:
           name: Deploy to EC2
           command: |
-            scp -o StrictHostKeyChecking=no -r build/* ec2-user@54.174.92.185:/var/www/html
+          scp -o StrictHostKeyChecking=no -r ~/project/dist/* ec2-user@54.174.92.185:/var/www/html
+
 
 workflows:
   version: 2
