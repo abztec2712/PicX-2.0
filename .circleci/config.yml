@@ -12,6 +12,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Check for package.json
+          command: ls -la ~/project/package.json
+
+      - run:
           name: Debug Files After Checkout
           command: ls -la ~/project
       - run:
@@ -42,7 +46,7 @@ jobs:
       - run:
           name: Deploy to EC2
           command: |
-            scp -o StrictHostKeyChecking=no -r build/* ec2-user@44.203.66.201:/var/www/html
+            scp -o StrictHostKeyChecking=no -r build/* ec2-user@54.174.92.185:/var/www/html
 
 workflows:
   version: 2
