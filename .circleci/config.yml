@@ -14,7 +14,6 @@ jobs:
       - run:
           name: Check for package.json
           command: ls -la ~/project/package.json
-
       - run:
           name: Debug Files After Checkout
           command: ls -la ~/project
@@ -30,13 +29,12 @@ jobs:
       - persist_to_workspace:
           root: ~/project
           paths:
-            - dist
+            - dist  # Ensure that 'dist' is correctly referenced
 
-
-deploy:
-  executor: node-executor
-  working_directory: ~/project
-  steps:
+  deploy:
+    executor: node-executor
+    working_directory: ~/project
+    steps:
       - checkout
       - attach_workspace:
           at: ~/project
@@ -50,9 +48,6 @@ deploy:
           name: Deploy to EC2
           command: scp -o StrictHostKeyChecking=no -r ~/project/dist/* ec2-user@54.174.92.185:/var/www/html
 
-
-
-
 workflows:
   version: 2
   build-deploy:
@@ -61,6 +56,3 @@ workflows:
       - deploy:
           requires:
             - build
-
-
-
