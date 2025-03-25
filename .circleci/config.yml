@@ -8,8 +8,12 @@ executors:
 jobs:
   build:
     executor: node-executor
+    working_directory: ~/project  # ✅ Set working directory
     steps:
       - checkout
+      - run:
+          name: Check Files
+          command: ls -la  # ✅ Debugging step to check files
       - run:
           name: Install dependencies
           command: npm install
@@ -17,19 +21,23 @@ jobs:
           name: Build project
           command: npm run build
       - persist_to_workspace:
-          root: .
+          root: ~/project  # ✅ Ensure workspace is correct
           paths:
             - build
 
   deploy:
     executor: node-executor
+    working_directory: ~/project  # ✅ Set working directory
     steps:
       - checkout
       - attach_workspace:
-          at: .
+          at: ~/project  # ✅ Attach to the correct path
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"  # Replace with your CircleCI SSH key fingerprint
+            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"  # Replace with your actual SSH fingerprint
+      - run:
+          name: Check Files Before Deploy
+          command: ls -la  # ✅ Debugging step to check build files
       - run:
           name: Deploy to EC2
           command: |
@@ -43,4 +51,5 @@ workflows:
       - deploy:
           requires:
             - build
+
 
