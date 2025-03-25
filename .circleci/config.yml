@@ -3,17 +3,20 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: cimg/node:18.17  # ✅ Updated image
+      - image: cimg/node:18.17
 
 jobs:
   build:
     executor: node-executor
-    working_directory: ~/project  # ✅ Set working directory
+    working_directory: ~/project  # ✅ Ensure working directory is set
     steps:
       - checkout
       - run:
-          name: Check Files
-          command: ls -la  # ✅ Debugging step to check files
+          name: Check Directory Structure
+          command: ls -la  # ✅ Debugging step to list files
+      - run:
+          name: Check for package.json
+          command: cat package.json || echo "package.json not found!"  # ✅ Debugging step
       - run:
           name: Install dependencies
           command: npm install
@@ -21,23 +24,20 @@ jobs:
           name: Build project
           command: npm run build
       - persist_to_workspace:
-          root: ~/project  # ✅ Ensure workspace is correct
+          root: ~/project
           paths:
             - build
 
   deploy:
     executor: node-executor
-    working_directory: ~/project  # ✅ Set working directory
+    working_directory: ~/project
     steps:
       - checkout
       - attach_workspace:
-          at: ~/project  # ✅ Attach to the correct path
-      - add_ssh_keys:
-          fingerprints:
-            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"  # Replace with your actual SSH fingerprint
+          at: ~/project
       - run:
-          name: Check Files Before Deploy
-          command: ls -la  # ✅ Debugging step to check build files
+          name: Verify Build Files Before Deploy
+          command: ls -la build/ || echo "Build folder not found!"  # ✅ Debugging step
       - run:
           name: Deploy to EC2
           command: |
