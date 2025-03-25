@@ -8,25 +8,26 @@ executors:
 jobs:
   build:
     executor: node-executor
-    working_directory: ~/project  # ✅ Ensure working directory is set
+    working_directory: ~/project
     steps:
       - checkout
       - run:
-          name: Check Directory Structure
-          command: ls -la  # ✅ Debugging step to list files
+          name: Debug Files After Checkout
+          command: ls -la ~/project
       - run:
-          name: Check for package.json
-          command: cat package.json || echo "package.json not found!"  # ✅ Debugging step
-      - run:
-          name: Install dependencies
+          name: Install Dependencies
           command: npm install
       - run:
-          name: Build project
+          name: Verify Vite Installation
+          command: npx vite --version
+      - run:
+          name: Build Project
           command: npm run build
       - persist_to_workspace:
           root: ~/project
           paths:
-            - build
+            - dist  # Ensure this matches your Vite output folder
+
 
   deploy:
     executor: node-executor
@@ -51,5 +52,6 @@ workflows:
       - deploy:
           requires:
             - build
+
 
 
