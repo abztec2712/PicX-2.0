@@ -16,7 +16,7 @@ interface TextElement {
     color: string;
     fontSize: number;
     fontFamily: string;
-    fontWeight: 'normal' | 'bold'; // Added fontWeight
+    fontWeight: string;
     textAlign: 'left' | 'center' | 'right';
   };
 }
@@ -37,7 +37,7 @@ const PosterEditor: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  
   const templates: Template[] = [
     {
       id: 'template1',
@@ -116,7 +116,7 @@ const PosterEditor: React.FC = () => {
     '#8B5CF6', // Violet
     '#10B981', // Emerald
     '#3B82F6', // Blue
-    '#EF4444'   // Red
+    '#EF4444'  // Red
   ];
 
   const addTextElement = (type: 'heading' | 'subheading' | 'body') => {
@@ -235,7 +235,7 @@ const PosterEditor: React.FC = () => {
 
   const handleDownload = () => {
     if (!editorRef.current) return;
-
+    
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -266,7 +266,7 @@ const PosterEditor: React.FC = () => {
 
   return (
     <div className="grid grid-cols-12 gap-6">
-      <div
+      <div 
         ref={editorRef}
         className="col-span-9 bg-gray-900 rounded-lg p-4 min-h-[600px] relative neon-border"
         onMouseMove={handleMouseMove}
@@ -327,7 +327,7 @@ const PosterEditor: React.FC = () => {
                     width: element.size.width,
                     height: element.size.height
                   }}
-
+                  
                   className="object-contain"
                 />
                 {element.isCropping && (
