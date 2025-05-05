@@ -30,30 +30,9 @@ jobs:
           root: ~/project
           paths:
             - dist  # Ensure that 'dist' is correctly referenced
-
-  deploy:
-    executor: node-executor
-    working_directory: ~/project
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/project
-      - add_ssh_keys:
-          fingerprints:
-            - "SHA256:q6IqW+A5//boOJzD4pEJ8clSiTiDfpdW7FrBSNzsfOQ"
-      - run:
-          name: Ensure target directory exists
-          command: ssh -o StrictHostKeyChecking=no ec2-user@35.153.28.47 "sudo mkdir -p /var/www/html && sudo chown -R ec2-user:ec2-user /var/www/html"
-      - run:
-          name: Deploy to EC2
-          command: scp -o StrictHostKeyChecking=no -r ~/project/dist/* ec2-user@35.153.28.47:/var/www/html
-
-
+#commited and updated
 workflows:
   version: 2
-  build-deploy:
+  build:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
