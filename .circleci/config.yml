@@ -30,7 +30,7 @@ jobs:
           root: ~/project
           paths:
             - dist  # Ensure that 'dist' is correctly referenced
-
+#commited and updated
 workflows:
   version: 2
   build:
